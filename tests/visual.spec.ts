@@ -12,6 +12,23 @@ const viewports = [
   { label: "390x844", width: 390, height: 844 },
 ] as const;
 
+const requiredProjectTitles = [
+  "Newspaper Design",
+  "Award Presentation Materials",
+  "Event Design",
+  "NHSJC Competitions",
+  "MK Pottery",
+];
+
+const removedVisibleCopy = [
+  "Project-led graphic design portfolio.",
+  "3:30",
+  "Projects, not categories.",
+  "Public Portfolio item",
+  "ASL Robotics Rebrand",
+  "Each card opens a case study structure that Blu can keep editing as final process notes, screenshots, and project reflections are added.",
+];
+
 function watchConsole(page: Page) {
   const messages: string[] = [];
 
@@ -38,22 +55,28 @@ async function expectNoHorizontalOverflow(page: Page) {
   expect(metrics, JSON.stringify(metrics)).toMatchObject({ overflow: false });
 }
 
-async function expectBlackStageFillsViewport(page: Page) {
-  const stage = await page.evaluate(() => {
-    const body = getComputedStyle(document.body);
+async function expectContinuousPaperFlow(page: Page) {
+  const flow = await page.evaluate(() => {
     const shell = document.querySelector(".site-shell");
+    const main = document.querySelector("main");
     const shellRect = shell?.getBoundingClientRect();
+    const mainStyles = main ? getComputedStyle(main) : null;
+    const shellStyles = shell ? getComputedStyle(shell) : null;
 
     return {
-      bodyBackground: body.backgroundColor,
-      bodyMinHeight: body.minHeight,
+      mainGap: mainStyles?.gap ?? "",
+      shellBottom: shellRect?.bottom ?? 0,
       shellWidth: shellRect?.width ?? 0,
+      viewportHeight: window.innerHeight,
       viewportWidth: window.innerWidth,
+      paperSurface: shellStyles?.backgroundColor ?? "",
     };
   });
 
-  expect(stage.bodyBackground).toBe("rgb(2, 2, 2)");
-  expect(stage.shellWidth).toBeGreaterThanOrEqual(stage.viewportWidth - 1);
+  expect(flow.shellWidth).toBeGreaterThanOrEqual(flow.viewportWidth - 1);
+  expect(flow.shellBottom).toBeGreaterThan(flow.viewportHeight - 1);
+  expect(flow.mainGap).toBe("0px");
+  expect(flow.paperSurface).not.toBe("rgb(2, 2, 2)");
 }
 
 async function expectNoFrameworkOverlay(page: Page) {
@@ -63,7 +86,11 @@ async function expectNoFrameworkOverlay(page: Page) {
 
 async function expectPersistentNav(page: Page) {
   const nav = page.locator(".site-nav");
+  const mark = page.locator(".nav-mark");
+
   await expect(nav).toBeVisible();
+  await expect(mark).toHaveText("Blu Belinky");
+  await expect(mark).not.toHaveText("BB");
 
   const beforeScroll = await nav.evaluate((element) => {
     const rect = element.getBoundingClientRect();
@@ -79,7 +106,7 @@ async function expectPersistentNav(page: Page) {
   });
 
   expect(beforeScroll.position).toBe("fixed");
-  expect(beforeScroll.top).toBeGreaterThanOrEqual(0);
+  expect(beforeScroll.top).toBeLessThanOrEqual(1);
   expect(beforeScroll.bottom).toBeLessThan(Math.min(beforeScroll.viewportHeight, 180));
   expect(beforeScroll.width).toBeGreaterThan(280);
 
@@ -99,7 +126,7 @@ async function expectPersistentNav(page: Page) {
   });
 
   expect(afterScroll.position).toBe("fixed");
-  expect(afterScroll.top).toBeGreaterThanOrEqual(0);
+  expect(afterScroll.top).toBeLessThanOrEqual(1);
   expect(Math.abs(afterScroll.top - beforeScroll.top)).toBeLessThanOrEqual(2);
   expect(afterScroll.bottom).toBeLessThan(Math.min(afterScroll.viewportHeight, 180));
 }
@@ -119,17 +146,17 @@ async function expectLongHandPointsAtProject(page: Page, slug: string, label: st
         const handToCardAngleDelta = await page.evaluate((projectSlug) => {
           const pin = document.querySelector(".clock-pin");
           const handTip = document.querySelector(".clock-hand-long circle");
-          const targetButton = document.querySelector(
-            `[data-project-index-item="${projectSlug}"] .clock-index-button`,
+          const targetLink = document.querySelector(
+            `[data-project-index-item="${projectSlug}"] .clock-index-link`,
           ) as HTMLElement | null;
 
-          if (!pin || !handTip || !targetButton) {
+          if (!pin || !handTip || !targetLink) {
             return null;
           }
 
           const pinRect = pin.getBoundingClientRect();
           const tipRect = handTip.getBoundingClientRect();
-          const targetRect = targetButton.getBoundingClientRect();
+          const targetRect = targetLink.getBoundingClientRect();
           const pinPoint = {
             x: pinRect.left + pinRect.width / 2,
             y: pinRect.top + pinRect.height / 2,
@@ -159,9 +186,41 @@ async function expectLongHandPointsAtProject(page: Page, slug: string, label: st
     .toBeLessThan(12);
 }
 
-test.describe("Blu Belinky portfolio visual audit", () => {
+async function expectClockLabelsDoNotOverlapFace(page: Page) {
+  const overlaps = await page.evaluate(() => {
+    const face = document.querySelector(".clock-illustration svg");
+    const faceRect = face?.getBoundingClientRect();
+    const links = Array.from(document.querySelectorAll<HTMLElement>(".clock-index-link"));
+
+    if (!faceRect) {
+      return ["missing clock face"];
+    }
+
+    return links
+      .map((link) => {
+        const rect = link.getBoundingClientRect();
+        const xOverlap = Math.max(0, Math.min(faceRect.right, rect.right) - Math.max(faceRect.left, rect.left));
+        const yOverlap = Math.max(0, Math.min(faceRect.bottom, rect.bottom) - Math.max(faceRect.top, rect.top));
+
+        return {
+          label: link.textContent?.trim() ?? "",
+          overlapArea: xOverlap * yOverlap,
+        };
+      })
+      .filter((item) => item.overlapArea > 4)
+      .map((item) => item.label);
+  });
+
+  expect(overlaps).toEqual([]);
+}
+
+test.describe("Blu Belinky portfolio PDF edit audit", () => {
+  test("project data keeps the PDF order", () => {
+    expect(projects.map((project) => project.title)).toEqual(requiredProjectTitles);
+  });
+
   for (const viewport of viewports) {
-    test(`homepage frame and key sections at ${viewport.label}`, async ({ page }, testInfo) => {
+    test(`homepage continuous flow and key sections at ${viewport.label}`, async ({ page }, testInfo) => {
       const consoleErrors = watchConsole(page);
 
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -173,23 +232,37 @@ test.describe("Blu Belinky portfolio visual audit", () => {
       await expect(page.locator("#work")).toBeVisible();
       await expect(page.locator("#about")).toBeVisible();
       await expect(page.locator("#contact")).toBeVisible();
-      await expectBlackStageFillsViewport(page);
+      await expectPersistentNav(page);
+      await expectContinuousPaperFlow(page);
       await expectNoHorizontalOverflow(page);
       await expectNoFrameworkOverlay(page);
+
+      for (const removedCopy of removedVisibleCopy) {
+        await expect(page.getByText(removedCopy, { exact: true })).toHaveCount(0);
+      }
+
       await capture(page, testInfo, `homepage-${viewport.label}`);
-      await expectPersistentNav(page);
 
-      await page.goto("/#contents");
+      await page.goto("/?capture=contents#contents", { waitUntil: "domcontentloaded" });
+      await page.locator("#contents").scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
       await expect(page.getByRole("heading", { name: "Contents" })).toBeVisible();
-      await expect(page.locator(".clock-illustration svg")).toBeVisible();
+      await expect(page.getByTestId("contents-clock")).toBeVisible();
+      await expect(page.getByTestId("clock-face")).toBeVisible();
       await expectNoHorizontalOverflow(page);
+      await capture(page, testInfo, `contents-${viewport.label}`);
 
-      await page.goto("/#work");
-      await expect(page.getByRole("heading", { name: "Projects, not categories." })).toBeVisible();
+      await page.goto("/?capture=work#work", { waitUntil: "domcontentloaded" });
+      await page.locator("#work").scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
+      await expect(page.getByRole("heading", { name: "Work", exact: true })).toBeVisible();
       await expect(page.locator(".project-card-link")).toHaveCount(projects.length);
+      await expect(page.locator(".project-card-copy h3")).toHaveText(requiredProjectTitles);
       await expectNoHorizontalOverflow(page);
 
-      await page.goto("/#contact");
+      await page.goto("/?capture=contact#contact", { waitUntil: "domcontentloaded" });
+      await page.locator("#contact").scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
       await expect(page.getByRole("heading", { name: "Email Blu." })).toBeVisible();
       await expect(page.getByRole("link", { name: "blubelinky@gmail.com" })).toBeVisible();
       await expect(page.getByText("CV link placeholder")).toHaveCount(0);
@@ -200,44 +273,46 @@ test.describe("Blu Belinky portfolio visual audit", () => {
     });
   }
 
-  test("contents clock responds to hover, focus, and reduced motion", async ({ page }, testInfo) => {
+  test("contents clock links are clickable and respond to hover, focus, and reduced motion", async ({
+    page,
+  }, testInfo) => {
     const consoleErrors = watchConsole(page);
 
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/#contents");
 
-    const longHand = page.locator(".clock-hand-long");
+    const longHand = page.getByTestId("clock-hand");
     await expect(longHand).toHaveCount(1);
     const restingTransform = await longHand.evaluate((element) => getComputedStyle(element).transform);
 
-    for (const project of projects) {
-      const item = page.locator(`[data-project-index-item="${project.slug}"]`);
-      const button = item.getByRole("button");
+    await expectClockLabelsDoNotOverlapFace(page);
 
-      await expect(button).toBeVisible();
-      await button.hover();
-      await expect(button).toHaveAttribute("aria-pressed", "true");
+    for (const project of projects) {
+      const link = page.getByTestId(`clock-project-${project.slug}`);
+
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute("href", `/projects/${project.slug}`);
+      await link.hover();
+      await expect(link).toHaveAttribute("data-active", "true");
       await expect(page.locator(".clock-caption")).toHaveText(project.title);
       await expect(page.locator(".active-project-ticket h3")).toHaveText(project.title);
     }
 
     await page.mouse.move(10, 10);
     for (const project of projects) {
-      const button = page.locator(`[data-project-index-item="${project.slug}"]`).getByRole("button");
+      const link = page.getByTestId(`clock-project-${project.slug}`);
 
-      await button.focus();
-      await expect(button).toHaveAttribute("aria-pressed", "true");
+      await link.focus();
+      await expect(link).toHaveAttribute("data-active", "true");
       await expect(page.locator(".clock-caption")).toHaveText(project.title);
       await expectLongHandPointsAtProject(page, project.slug, project.title);
     }
 
     const focusedProject = projects[1];
-    const focusedButton = page
-      .locator(`[data-project-index-item="${focusedProject.slug}"]`)
-      .getByRole("button");
+    const focusedLink = page.getByTestId(`clock-project-${focusedProject.slug}`);
 
-    await focusedButton.focus();
-    await expect(focusedButton).toHaveAttribute("aria-pressed", "true");
+    await focusedLink.focus();
+    await expect(focusedLink).toHaveAttribute("data-active", "true");
     await expect(page.locator(".clock-caption")).toHaveText(focusedProject.title);
 
     const activeTransform = await longHand.evaluate((element) => getComputedStyle(element).transform);
@@ -279,14 +354,21 @@ test.describe("Blu Belinky portfolio visual audit", () => {
 
     await capture(page, testInfo, "contents-clock-active-1440x900");
 
+    for (const project of projects) {
+      await page.goto("/#contents");
+      await page.getByTestId(`clock-project-${project.slug}`).click();
+      await expect(page).toHaveURL(`/projects/${project.slug}`);
+      await expect(page.getByRole("heading", { name: project.title })).toBeVisible();
+    }
+
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/#contents");
-    const reducedMotionButton = page
-      .locator(`[data-project-index-item="${projects[2].slug}"]`)
-      .getByRole("button");
+    const reducedMotionLink = page.getByTestId(`clock-project-${projects[2].slug}`);
 
-    await reducedMotionButton.focus();
-    await expect(reducedMotionButton).toHaveAttribute("aria-pressed", "true");
+    await expect(reducedMotionLink).toBeVisible();
+    await reducedMotionLink.hover();
+    await reducedMotionLink.focus();
+    await expect(reducedMotionLink).toHaveAttribute("data-active", "true");
     await expect(page.locator(".clock-caption")).toHaveText(projects[2].title);
 
     const transition = await longHand.evaluate((element) => getComputedStyle(element).transition);
@@ -294,7 +376,7 @@ test.describe("Blu Belinky portfolio visual audit", () => {
     expect(consoleErrors).toEqual([]);
   });
 
-  test("project cards and case-study navigation are usable", async ({ page }, testInfo) => {
+  test("project cards and PDF case-study layout are usable", async ({ page }, testInfo) => {
     const consoleErrors = watchConsole(page);
     const firstProject = projects[0];
 
@@ -309,6 +391,15 @@ test.describe("Blu Belinky portfolio visual audit", () => {
 
     await expect(page).toHaveURL(`/projects/${firstProject.slug}`);
     await expect(page.getByRole("heading", { name: firstProject.title })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Process" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Gallery" })).toBeVisible();
+    await expect(page.getByText("Problem / Brief")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Brief" })).toHaveCount(0);
+    await expect(page.getByText("Final Outcome")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Reflection" })).toHaveCount(0);
+    await expect(page.locator(".process-image-composition figure")).toHaveCount(3);
+    await expect(page.locator(".case-gallery figure")).toHaveCount(firstProject.gallery.length);
     await expect(page.getByRole("link", { name: "Back to contents" })).toBeVisible();
     await expectNoHorizontalOverflow(page);
     await expectNoFrameworkOverlay(page);

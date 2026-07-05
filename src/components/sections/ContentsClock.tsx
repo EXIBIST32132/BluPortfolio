@@ -28,6 +28,7 @@ export function ContentsClock({ projects }: ContentsClockProps) {
       id="contents"
       className="editorial-panel contents-panel"
       aria-labelledby="contents-title"
+      data-testid="contents-clock"
       initial={reducedMotion ? false : { opacity: 0, y: 34, rotate: 0.2 }}
       whileInView={{ opacity: 1, y: 0, rotate: 0 }}
       viewport={{ once: true, amount: 0.16, margin: "0px 0px -80px 0px" }}
@@ -39,41 +40,44 @@ export function ContentsClock({ projects }: ContentsClockProps) {
       </div>
 
       <div className="contents-clock-layout">
-        <div className="clock-board" aria-label="Project contents clock">
-          <ClockIllustration
-            angle={clockAngle}
-            activeTitle={clockTitle}
-            resting={!activeProject}
-            reducedMotion={Boolean(reducedMotion)}
-          />
+        <div className="clock-sticky-wrap">
+          <div className="clock-board" aria-label="Project contents clock">
+            <ClockIllustration
+              angle={clockAngle}
+              activeTitle={clockTitle}
+              resting={!activeProject}
+              reducedMotion={Boolean(reducedMotion)}
+            />
 
-          {projects.map((project) => (
-            <div
-              className="clock-index-item"
-              data-project-index-item={project.slug}
-              key={project.slug}
-              style={
-                {
-                  transform: `rotate(${project.clockAngle}deg) translate(var(--clock-radius)) rotate(${-project.clockAngle}deg) translate(-50%, -50%)`,
-                  "--project-accent": project.accentColor,
-                } as CSSProperties
-              }
-            >
-              <button
-                type="button"
-                className="clock-index-button"
-                aria-label={`Point the contents clock to ${project.title}, ${project.year}`}
-                aria-pressed={project.slug === activeProject?.slug}
-                onClick={() => setActiveSlug(project.slug)}
-                onFocus={() => setActiveSlug(project.slug)}
-                onPointerEnter={() => setActiveSlug(project.slug)}
-                onTouchStart={() => setActiveSlug(project.slug)}
+            {projects.map((project) => (
+              <div
+                className="clock-index-item"
+                data-project-index-item={project.slug}
+                key={project.slug}
+                style={
+                  {
+                    transform: `rotate(${project.clockAngle}deg) translate(var(--clock-radius)) rotate(${-project.clockAngle}deg) translate(-50%, -50%)`,
+                    "--project-accent": project.accentColor,
+                  } as CSSProperties
+                }
               >
-                <span>{project.title}</span>
-                <small>{project.year}</small>
-              </button>
-            </div>
-          ))}
+                <Link
+                  className="clock-index-link"
+                  data-active={project.slug === activeProject?.slug ? "true" : "false"}
+                  data-testid={`clock-project-${project.slug}`}
+                  href={`/projects/${project.slug}`}
+                  aria-label={`Open ${project.title} case study`}
+                  onClick={() => setActiveSlug(project.slug)}
+                  onFocus={() => setActiveSlug(project.slug)}
+                  onPointerDown={() => setActiveSlug(project.slug)}
+                  onPointerEnter={() => setActiveSlug(project.slug)}
+                >
+                  <span>{project.title}</span>
+                  <small>{project.year}</small>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
 
         <aside

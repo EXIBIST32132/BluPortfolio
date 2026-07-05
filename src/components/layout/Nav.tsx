@@ -17,7 +17,7 @@ export function Nav({ homePrefix = "", items = fallbackNavItems }: NavProps) {
   return (
     <header className="site-nav" aria-label="Primary navigation">
       <Link className="nav-mark" href={`${homePrefix || "/"}#cover`} aria-label="Blu Belinky home">
-        BB
+        Blu Belinky
       </Link>
       <nav>
         <ul>

@@ -9,8 +9,12 @@ export function Doodle({ variant = "sparkle", className }: DoodleProps) {
   if (variant === "flower") {
     return (
       <svg aria-hidden="true" className={cn("doodle", className)} viewBox="0 0 80 80">
-        <path d="M40 35c-12-24 18-24 6-1 23-11 23 18 0 7 10 23-18 22-7 0-12 22-32-4-6-8-22 11-23-18-1-7" />
-        <circle cx="40" cy="40" r="7" />
+        <circle cx="40" cy="40" r="6" />
+        <path d="M40 20c8 0 12 5 12 10s-4 9-12 9-12-4-12-9 4-10 12-10Z" />
+        <path d="M60 40c0 8-5 12-10 12s-9-4-9-12 4-12 9-12 10 4 10 12Z" />
+        <path d="M40 60c-8 0-12-5-12-10s4-9 12-9 12 4 12 9-4 10-12 10Z" />
+        <path d="M20 40c0-8 5-12 10-12s9 4 9 12-4 12-9 12-10-4-10-12Z" />
+        <path d="M31 58c-5 6-9 9-14 10" />
       </svg>
     );
   }

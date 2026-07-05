@@ -31,7 +31,7 @@ export function ClockIllustration({
       className={`clock-illustration${resting ? " clock-illustration-resting" : ""}`}
       aria-label={resting ? "Contents clock in resting state" : `Clock pointing to ${activeTitle}`}
     >
-      <svg viewBox="0 0 220 220" role="img">
+      <svg viewBox="0 0 220 220" role="img" data-testid="clock-face">
         <title>Interactive contents clock</title>
         <circle className="clock-face" cx="110" cy="110" r="94" />
         <circle className="clock-ring" cx="110" cy="110" r="78" />
@@ -52,9 +52,9 @@ export function ClockIllustration({
         <g className="clock-hand clock-hand-short" style={shortHandStyle}>
           <line x1="110" x2="110" y1="110" y2="61" />
         </g>
-        <g className="clock-hand clock-hand-long" style={handStyle}>
-          <line x1="110" x2="110" y1="121" y2="34" />
-          <circle cx="110" cy="34" r="5" />
+        <g className="clock-hand clock-hand-long" style={handStyle} data-testid="clock-hand">
+          <line x1="110" x2="110" y1="110" y2="32" />
+          <circle cx="110" cy="32" r="5" />
         </g>
         <circle className="clock-pin" cx="110" cy="110" r="8" />
       </svg>

@@ -25,13 +25,20 @@ Blu's public contact is email only: `blubelinky@gmail.com`. Do not add phone num
 
 Add or update project objects in `src/content/projects.ts`.
 
-Important fields:
+The five current project entries should stay in this order unless Blu changes the portfolio sequence:
+
+1. `Newspaper Design`
+2. `Award Presentation Materials`
+3. `Event Design`
+4. `NHSJC Competitions`
+5. `MK Pottery`
+
+Important public-facing fields:
 
 - `slug`
 - `title`
 - `subtitle`
 - `year`
-- `status`
 - `tags`
 - `thumbnail`
 - `heroImage`
@@ -40,30 +47,41 @@ Important fields:
 - `role`
 - `tools`
 - `summary`
-- `brief`
+- `overview`
 - `process`
-- `outcome`
-- `reflection`
+- `processImages`
 - `gallery`
 
 Project pages are generated automatically at `/projects/[slug]`.
+
+The legacy fields `brief`, `outcome`, and `reflection` are still present in the typed data for compatibility, but the public case-study layout now uses `Overview`, `Process`, and `Gallery`.
 
 ## Clock Angles
 
 The Contents page clock reads each project's `clockAngle` field from `src/content/projects.ts`.
 
 - Use degrees from `0` to `360`.
-- Keep angles spaced far enough apart that desktop labels do not overlap.
+- Keep angles spaced far enough apart that desktop labels do not overlap the clock face.
 - Hover, keyboard focus, click, and mobile tap update the active project and rotate the hands.
 - Reduced-motion users still get active project changes, but hand movement is instant.
 
 On mobile, the clock remains visible and project items become a readable editorial list.
 
+Each clock project box is a real link. Keep the `slug` stable unless the project URL should change.
+
 ## Images
 
 Put project images in `public/images/projects/` and update the matching `src`, `alt`, and `caption` fields in `src/content/projects.ts`.
 
-Images currently included were copied from Blu's reachable public Carrd portfolio for this prototype.
+Opening images and galleries are now organized by project folder:
+
+- `public/images/projects/newspaper-design/`
+- `public/images/projects/award-presentation-materials/`
+- `public/images/projects/event-design/`
+- `public/images/projects/nhsjc-competitions/`
+- `public/images/projects/mk-pottery/`
+
+To replace an opening image, add the new file under the relevant project folder and update the matching `heroImage` and `thumbnail` paths. To edit the case-study process composition, update `processImages`; the first image is the large left image and the next two are stacked on the right. The `gallery` array should include all images Blu wants shown for that project.
 
 ## DT Getai Font
 
@@ -90,7 +108,9 @@ npm run qa:visual
 
 ## Stage And Panel System
 
-The portfolio is a scrollable black-stage booklet with warm-white editorial panels. Panels are connected with repeated paper textures, tape strips, dashed borders, blue/purple accents, and project-led labels. Keep this system intact when adding features so the site does not drift toward a generic SaaS/card-grid portfolio.
+The portfolio is now a continuous warm-paper editorial flow with a black fixed header/stage edge and connected white portfolio panels. Blu's PDF edits removed the slideshow-like section gaps, replaced the `BB` mark with `Blu Belinky`, removed the opening tagline/time label, made clock boxes clickable, and changed case studies to `Overview`, `Process`, and `Gallery`. The follow-up image pass removed ASL Robotics Rebrand and moved each remaining project's image set into its own folder.
+
+Keep this system intact when adding features so the site does not drift toward a generic SaaS/card-grid portfolio.
 
 ## Deploy On Vercel
 

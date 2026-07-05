@@ -35,7 +35,6 @@ export function HeroCover({ navigationItems = fallbackHeroLinks, profile }: Hero
         <div className="cover-grid">
           <div className="cover-object" aria-hidden="true">
             <div className="cover-object-screen">
-              <span className="mini-clock">3:30</span>
               <span className="screen-line screen-line-one" />
               <span className="screen-line screen-line-two" />
               <span className="screen-dot" />
@@ -46,7 +45,6 @@ export function HeroCover({ navigationItems = fallbackHeroLinks, profile }: Hero
           <div className="cover-copy">
             <p className="cover-label">{profile.portfolioTitle}</p>
             <h1 id="cover-title">{profile.name}</h1>
-            <p>{profile.positioning}</p>
           </div>
         </div>
 

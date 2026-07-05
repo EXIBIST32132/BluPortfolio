@@ -92,12 +92,14 @@ export type Project = {
   role: string;
   tools: string[];
   summary: string;
+  overview: string;
   brief: string;
   process: string;
   outcome: string;
   reflection: string;
   sourceUrl?: string;
   contentNote?: string;
+  processImages: ProjectImage[];
   gallery: ProjectImage[];
 };
 

@@ -26,10 +26,23 @@ The supplied visual direction was interpreted as a portfolio object rather than 
 - Design presets map to CSS data attributes and tokens. Do not introduce arbitrary one-off style controls for content edits.
 - Project images live under `public/images/projects/` and must include useful alt text in the project data.
 
+## Portfolio.pdf Edit Pass
+
+Blu's latest PDF notes are the source of truth for this refinement pass.
+
+- The page now reads as one continuous warm-paper portfolio flow instead of separated slideshow-like panels.
+- The fixed header is flush with the top of the viewport and uses the full name `Blu Belinky`.
+- The opening screen no longer shows the deleted tagline or unexplained `3:30` label.
+- The contents clock keeps the project-led index, but every project box is now a real case-study link.
+- Desktop clock labels are spaced outside the clock face; smaller screens switch to a readable editorial list.
+- The current five-project order is: Newspaper Design, Award Presentation Materials, Event Design, NHSJC Competitions, MK Pottery.
+- Case-study pages use Overview, Process, and Gallery, with a large-left/two-right process image composition and galleries that show every image in each organized project folder.
+- ASL Robotics Rebrand was removed in the follow-up image pass.
+
 ## Seamless Stage System
 
-- The site should always read as a black stage holding a stack of handmade editorial portfolio panels.
-- The top section tabs are fixed on the black stage so the portfolio keeps visible orientation while moving through long panels and case-study pages.
+- The site should read as a continuous warm-paper portfolio object with black used as an intentional header/frame/border system.
+- The top section tabs are fixed at the top edge so the portfolio keeps visible orientation while moving through long panels and case-study pages.
 - Panel seams are softened with repeated tape marks, dashed inner borders, warm-paper grids, and blue/purple wash accents.
 - Project cards should feel like pinned posters or scraps, not generic product cards.
 - The strongest visual rhythm should come from typography, paper edges, and project imagery rather than decorative animation.

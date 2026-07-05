@@ -31,9 +31,7 @@ export function ProjectCaseStudy({ nextProject, project }: ProjectCaseStudyProps
 
       <header className="case-hero">
         <div className="case-hero-copy">
-          <p className="project-kicker">
-            {project.year} / {project.status}
-          </p>
+          <p className="project-kicker">{project.year}</p>
           <h1>{project.title}</h1>
           <p>{project.summary}</p>
           <div className="tag-row">
@@ -57,8 +55,6 @@ export function ProjectCaseStudy({ nextProject, project }: ProjectCaseStudyProps
         </figure>
       </header>
 
-      {project.contentNote ? <p className="content-note">{project.contentNote}</p> : null}
-
       <dl className="case-meta">
         <div>
           <dt>Role</dt>
@@ -80,30 +76,52 @@ export function ProjectCaseStudy({ nextProject, project }: ProjectCaseStudyProps
         ) : null}
       </dl>
 
-      <div className="case-sections">
-        <section>
-          <h2>Problem / Brief</h2>
-          <p>{project.brief}</p>
+      <div className="case-story">
+        <section className="case-copy-block">
+          <h2>Overview</h2>
+          <p>{project.overview}</p>
         </section>
-        <section>
+
+        <section className="case-copy-block">
           <h2>Process</h2>
           <p>{project.process}</p>
         </section>
-        <section>
-          <h2>Final Outcome</h2>
-          <p>{project.outcome}</p>
-        </section>
-        <section>
-          <h2>Reflection</h2>
-          <p>{project.reflection}</p>
-        </section>
+
+        <div className="process-image-composition" aria-label={`${project.title} process images`}>
+          <figure className="process-image-main">
+            <div className="process-image-frame">
+              <Image
+                src={project.processImages[0]?.src ?? project.heroImage.src}
+                alt={project.processImages[0]?.alt ?? project.heroImage.alt}
+                fill
+                sizes="(max-width: 900px) 92vw, 620px"
+              />
+            </div>
+            <figcaption>{project.processImages[0]?.caption ?? project.heroImage.caption}</figcaption>
+          </figure>
+          <div className="process-image-stack">
+            {project.processImages.slice(1, 3).map((image, index) => (
+              <figure key={`${project.slug}-process-${image.src}-${index}`}>
+                <div className="process-image-frame">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="(max-width: 900px) 92vw, 300px"
+                  />
+                </div>
+                <figcaption>{image.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       </div>
 
       <section className="gallery-section" aria-labelledby="gallery-heading">
         <h2 id="gallery-heading">Gallery</h2>
         <div className="case-gallery">
-          {project.gallery.map((image) => (
-            <figure key={`${project.slug}-${image.src}`}>
+          {project.gallery.map((image, index) => (
+            <figure key={`${project.slug}-gallery-${image.src}-${index}`}>
               <div className="case-gallery-frame">
                 <Image
                   src={image.src}

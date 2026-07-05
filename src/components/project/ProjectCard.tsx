@@ -44,7 +44,6 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <span>{project.year}</span>
         </div>
         <div className="project-card-copy">
-          <p className="project-kicker">{project.status}</p>
           <h3>{project.title}</h3>
           <p>{project.subtitle}</p>
           <div className="tag-row" aria-label={`${project.title} tags`}>

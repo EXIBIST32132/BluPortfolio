@@ -3,9 +3,9 @@ import type { DesignSettings, Profile, SectionSetting, SiteSettings } from "@/ty
 export const profile: Profile = {
   name: "Blu Belinky",
   role: "Student journalist and graphic designer",
-  shortTagline: "Project-led graphic design portfolio.",
+  shortTagline: "Graphic design, editorial systems, and visual storytelling.",
   portfolioTitle: "Design Portfolio.",
-  positioning: "Project-led graphic design portfolio.",
+  positioning: "Graphic design, editorial systems, and visual storytelling.",
   sourcePortfolio: "https://blubelinky.carrd.co/",
   bio: [
     "Blu Belinky is a student journalist and designer working across publication layouts, graphics, photography, robotics communications, and community storytelling.",
