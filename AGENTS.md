@@ -1,5 +1,36 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Blu Belinky Portfolio
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+This repository is Blu Belinky's custom design portfolio. Treat it as a designed object: playful, editorial, handmade, collage-like, project-led, visually memorable, and still polished enough for CV/design applications.
+
+## Portfolio Rules
+
+- Project-based structure is mandatory. Do not organize the main site around Brand / Poster / Logo / Illustration; use those only as project tags.
+- Avoid generic AI website patterns: no stock SaaS layouts, no purple-to-white gradient heroes, no glassmorphism defaults, no filler badges, no random decorative text, and no copied non-Latin characters from references.
+- Preserve the black outer stage, white or warm-white editorial panels, handmade/collage details, and Blu's blue/purple accent direction unless Blu changes the art direction.
+- Use design tokens in `src/app/globals.css` for colors, typography, spacing, radii, borders, shadows, z-index, and motion.
+- All colors, shadows, spacing, borders, and motion values should come from tokens or established token-derived patterns. Avoid one-off hex values in components.
+- Use transform and opacity for motion. Do not animate layout properties such as top, left, width, height, or margin for routine interactions.
+- Support `prefers-reduced-motion` globally and in interactive components such as the contents clock.
+- Keep the clock-hand hover/focus/tap interaction as the signature interaction. It must remain keyboard accessible and mobile/touch usable whenever the Contents page changes.
+- The black stage/background must fill the full viewport at every breakpoint. Do not allow accidental white browser edges, horizontal scroll, or short awkward gaps between portfolio panels.
+- The top navigation tabs must remain fixed, visible, readable, and keyboard accessible while scrolling on both the homepage and project pages.
+- Avoid regressions toward generic SaaS/card-grid layouts. Project cards should keep a paper/poster/collage feeling and remain project-led.
+- Sanity is the production editing surface. Do not move public content back to hardcoded-only files; local `src/content/*` files are fallback fixture content for builds without CMS credentials.
+- Sanity Studio lives at `/studio`. Keep CMS schemas constrained to presets and structured fields; do not expose arbitrary raw CSS strings through the CMS.
+- Project `clockAngle` and `order` are CMS-editable and must keep the Contents clock hover/focus/tap interaction accurate, keyboard accessible, and mobile usable.
+- Keep Sanity preview/revalidation routes server-only. Do not expose read/write tokens to the browser or commit private env values.
+- Maintain accessibility: semantic HTML, keyboard navigation, visible focus states, labelled links/buttons, alt text, acceptable contrast, and mobile responsiveness.
+- Do not use unlicensed fonts. Use DT Getai only if Blu provides a licensed local font file under `public/fonts/`; otherwise keep the documented fallback and README TODO.
+- Do not invent real contact details, phone numbers, private addresses, or social links. Use placeholders only when clearly labelled as editable placeholders.
+- Keep Blu's content easy to edit in `src/content/profile.ts` and `src/content/projects.ts`.
+
+## Verification
+
+- Run lint, typecheck, and build before final response:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run build`
+- Run the Playwright visual audit after layout, animation, or clock changes:
+  - `npm run qa:visual`
+- Use browser screenshots or Playwright where available. Check at least 1920x1080, 1440x900, 1024x768, and 390x844.
+- Check for horizontal overflow, clipped text, broken focus states, unusable mobile project index, and any visual drift toward generic template patterns.
