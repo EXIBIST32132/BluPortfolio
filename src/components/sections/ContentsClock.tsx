@@ -73,7 +73,7 @@ export function ContentsClock({ projects }: ContentsClockProps) {
                   onPointerEnter={() => setActiveSlug(project.slug)}
                 >
                   <span>{project.title}</span>
-                  <small>{project.year}</small>
+                  <small>{project.tags.slice(0, 2).join(" · ")}</small>
                 </Link>
               </div>
             ))}

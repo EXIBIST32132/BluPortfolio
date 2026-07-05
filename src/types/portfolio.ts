@@ -72,7 +72,76 @@ export type Profile = {
 export type ProjectImage = {
   src: string;
   alt: string;
-  caption: string;
+  caption?: string;
+};
+
+export type ProjectCaseFeature = {
+  heading: string;
+  copy?: string;
+  image: ProjectImage;
+};
+
+export type ProjectImageTextBlock = {
+  heading: string;
+  copy: string;
+  image: ProjectImage;
+};
+
+export type ProjectCaseStudy = {
+  layout:
+    | "minimal"
+    | "newspaper"
+    | "award"
+    | "event"
+    | "nhsjc"
+    | "mk-pottery";
+  title?: string;
+  blurb: string;
+  heroImage: ProjectImage;
+  overview?: string;
+  featuredSpreads?: ProjectCaseFeature[];
+  coverDesign?: {
+    heading: string;
+    copy: string;
+    images: ProjectImage[];
+  };
+  rangeAcrossVolumes?: ProjectImage[];
+  bottomFeatures?: ProjectCaseFeature[];
+  beyondPage?: {
+    heading: string;
+    copy: string;
+    images: ProjectImage[];
+  };
+  impactBoard?: {
+    heading: string;
+    copy: string;
+    largeImage: ProjectImage;
+    supportImages: ProjectImage[];
+  };
+  impactBook?: ProjectImageTextBlock;
+  pitSignage?: {
+    heading: string;
+    copy: string;
+    images: ProjectImage[];
+    largeImage?: ProjectImage;
+  };
+  festival?: ProjectImageTextBlock;
+  nhsjcEntries?: ProjectImageTextBlock[];
+  brandIdentity?: {
+    heading: string;
+    copy: string;
+    images: ProjectImage[];
+  };
+  brochure?: {
+    heading: string;
+    copy: string;
+    featureImages: ProjectImage[];
+    supportImages: ProjectImage[];
+  };
+  outcomes?: {
+    heading: string;
+    copy: string;
+  };
 };
 
 export type Project = {
@@ -101,6 +170,7 @@ export type Project = {
   contentNote?: string;
   processImages: ProjectImage[];
   gallery: ProjectImage[];
+  caseStudy: ProjectCaseStudy;
 };
 
 export type PortfolioContent = {

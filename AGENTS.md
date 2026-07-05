@@ -16,12 +16,15 @@ This repository is Blu Belinky's custom design portfolio. Treat it as a designed
 - The top navigation tabs must remain fixed, visible, readable, and keyboard accessible while scrolling on both the homepage and project pages.
 - Avoid regressions toward generic SaaS/card-grid layouts. Project cards should keep a paper/poster/collage feeling and remain project-led.
 - Local typed files are the production editing surface. Keep Blu's content easy to edit in `src/content/profile.ts` and `src/content/projects.ts`.
-- Portfolio.pdf edits from this pass are a design/content source of truth unless Blu gives newer direction.
+- `NewPortfolio.pdf` is the current design/content source of truth unless Blu gives newer direction.
+- Visible project/card/case-study copy must come from `NewPortfolio.pdf` only. Do not invent portfolio copy, paraphrase Blu's text, or add filler such as coming-soon notes.
+- PDF wireframes define layout; the blue boxes are image slots, the numbers are slot references, and the text below the wireframe fills the placeholder text blocks. Do not render wireframe boxes, slot numbers, lorem text, or `blah blah`.
+- ASL Robotics Rebrand is currently removed from the public Work cards, clock index, order, and routing unless Blu explicitly asks to restore it.
 - The top-left header mark must read `Blu Belinky`, not `BB`, and the fixed header must remain flush with the top of the viewport.
 - The Work section and project navigation must preserve this order unless Blu changes it: Newspaper Design, Award Presentation Materials, Event Design, NHSJC Competitions, MK Pottery.
 - Project `clockAngle` and `order` live in `src/content/projects.ts` and must keep the Contents clock hover/focus/tap interaction accurate, keyboard accessible, and mobile usable.
 - Contents clock project items must remain real clickable links, keyboard accessible, mobile/touch usable, and visually spaced away from the clock face.
-- Case-study pages must use the public structure `Overview`, `Process`, and `Gallery` unless Blu changes direction later. Do not reintroduce public `Problem / Brief`, `Final Outcome`, or `Reflection` as the main structure.
+- Case-study pages must follow the project-specific `NewPortfolio.pdf` layouts unless Blu changes direction later. Do not force every project into a generic `Overview / Process / Gallery` template, and do not reintroduce public `Problem / Brief`, `Final Outcome`, or `Reflection` as the main structure.
 - Maintain accessibility: semantic HTML, keyboard navigation, visible focus states, labelled links/buttons, alt text, acceptable contrast, and mobile responsiveness.
 - Do not use unlicensed fonts. Use DT Getai only if Blu provides a licensed local font file under `public/fonts/`; otherwise keep the documented fallback and README TODO.
 - Do not invent real contact details, phone numbers, private addresses, or social links. Use placeholders only when clearly labelled as editable placeholders.

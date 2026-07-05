@@ -21,12 +21,31 @@ const requiredProjectTitles = [
 ];
 
 const removedVisibleCopy = [
+  "BB",
   "Project-led graphic design portfolio.",
   "3:30",
   "Projects, not categories.",
   "Public Portfolio item",
-  "ASL Robotics Rebrand",
+  "Email Blu.",
+  "Blu's public contact information is intentionally limited to email.",
+  "Use email as Blu's only public contact detail.",
   "Each card opens a case study structure that Blu can keep editing as final process notes, screenshots, and project reflections are added.",
+  "blah blah",
+  "lorem",
+  "Lorem",
+  "Coming soon",
+  "Placeholder",
+  "TODO",
+  "ASL Robotics Rebrand",
+  "A full brand identity for ASL Robotics — colours, guidelines, and logo — designed and directed as team president.",
+];
+
+const exactProjectDescriptions = [
+  "Publication spreads and feature graphics for The Standard built around pacing, hierarchy, and page rhythm.",
+  "Impact presentation design for FRC regionals, built to communicate the team's story clearly to judges.",
+  "Pit displays and signage designed to hold up under the noise and pace of live competition.",
+  "Advert and logo contest entries exploring compact communication and visual identity.",
+  "Branding, advertising, and workshop information design for MK Pottery, spanning identity and print materials.",
 ];
 
 function watchConsole(page: Page) {
@@ -82,6 +101,16 @@ async function expectContinuousPaperFlow(page: Page) {
 async function expectNoFrameworkOverlay(page: Page) {
   await expect(page.locator("nextjs-portal")).toHaveCount(0);
   await expect(page.getByText("Unhandled Runtime Error")).toHaveCount(0);
+}
+
+async function expectNoForbiddenPublicCopy(page: Page) {
+  for (const removedCopy of removedVisibleCopy) {
+    await expect(page.getByText(removedCopy, { exact: true })).toHaveCount(0);
+  }
+
+  for (const oldHeading of ["Problem", "Brief", "Final outcome", "Final Outcome", "Reflection"]) {
+    await expect(page.getByRole("heading", { name: oldHeading, exact: true })).toHaveCount(0);
+  }
 }
 
 async function expectPersistentNav(page: Page) {
@@ -188,7 +217,7 @@ async function expectLongHandPointsAtProject(page: Page, slug: string, label: st
 
 async function expectClockLabelsDoNotOverlapFace(page: Page) {
   const overlaps = await page.evaluate(() => {
-    const face = document.querySelector(".clock-illustration svg");
+    const face = document.querySelector(".clock-face");
     const faceRect = face?.getBoundingClientRect();
     const links = Array.from(document.querySelectorAll<HTMLElement>(".clock-index-link"));
 
@@ -196,18 +225,25 @@ async function expectClockLabelsDoNotOverlapFace(page: Page) {
       return ["missing clock face"];
     }
 
+    const center = {
+      x: faceRect.left + faceRect.width / 2,
+      y: faceRect.top + faceRect.height / 2,
+    };
+    const radius = faceRect.width / 2;
+
     return links
       .map((link) => {
         const rect = link.getBoundingClientRect();
-        const xOverlap = Math.max(0, Math.min(faceRect.right, rect.right) - Math.max(faceRect.left, rect.left));
-        const yOverlap = Math.max(0, Math.min(faceRect.bottom, rect.bottom) - Math.max(faceRect.top, rect.top));
+        const closestX = Math.max(rect.left, Math.min(center.x, rect.right));
+        const closestY = Math.max(rect.top, Math.min(center.y, rect.bottom));
+        const distanceToCircle = Math.hypot(closestX - center.x, closestY - center.y);
 
         return {
           label: link.textContent?.trim() ?? "",
-          overlapArea: xOverlap * yOverlap,
+          overlapsFace: distanceToCircle < radius + 4,
         };
       })
-      .filter((item) => item.overlapArea > 4)
+      .filter((item) => item.overlapsFace)
       .map((item) => item.label);
   });
 
@@ -217,6 +253,7 @@ async function expectClockLabelsDoNotOverlapFace(page: Page) {
 test.describe("Blu Belinky portfolio PDF edit audit", () => {
   test("project data keeps the PDF order", () => {
     expect(projects.map((project) => project.title)).toEqual(requiredProjectTitles);
+    expect(projects.map((project) => project.subtitle)).toEqual(exactProjectDescriptions);
   });
 
   for (const viewport of viewports) {
@@ -237,9 +274,7 @@ test.describe("Blu Belinky portfolio PDF edit audit", () => {
       await expectNoHorizontalOverflow(page);
       await expectNoFrameworkOverlay(page);
 
-      for (const removedCopy of removedVisibleCopy) {
-        await expect(page.getByText(removedCopy, { exact: true })).toHaveCount(0);
-      }
+      await expectNoForbiddenPublicCopy(page);
 
       await capture(page, testInfo, `homepage-${viewport.label}`);
 
@@ -258,16 +293,39 @@ test.describe("Blu Belinky portfolio PDF edit audit", () => {
       await expect(page.getByRole("heading", { name: "Work", exact: true })).toBeVisible();
       await expect(page.locator(".project-card-link")).toHaveCount(projects.length);
       await expect(page.locator(".project-card-copy h3")).toHaveText(requiredProjectTitles);
+      await expect(page.locator(".project-card-copy > p")).toHaveText(exactProjectDescriptions);
+      for (const project of projects) {
+        const card = page.locator(`.project-card-link[href="/projects/${project.slug}"]`);
+
+        await expect(card).toBeVisible();
+        for (const tag of project.tags) {
+          await expect(card.getByText(tag, { exact: true })).toBeVisible();
+        }
+      }
       await expectNoHorizontalOverflow(page);
+      await capture(page, testInfo, `work-${viewport.label}`);
+
+      await page.goto(`/projects/${projects[0].slug}`, { waitUntil: "domcontentloaded" });
+      await expect(page.getByRole("heading", { name: projects[0].title })).toBeVisible();
+      await expect(page.getByText(projects[0].caseStudy.overview ?? "", { exact: true })).toBeVisible();
+      await expectNoHorizontalOverflow(page);
+      await capture(page, testInfo, `project-newspaper-${viewport.label}`);
 
       await page.goto("/?capture=contact#contact", { waitUntil: "domcontentloaded" });
       await page.locator("#contact").scrollIntoViewIfNeeded();
       await page.waitForTimeout(300);
-      await expect(page.getByRole("heading", { name: "Email Blu." })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Contact:" })).toBeVisible();
+      await expect(page.getByText("Email Blu.", { exact: true })).toHaveCount(0);
+      await expect(
+        page.getByText("Blu's public contact information is intentionally limited to email.", {
+          exact: true,
+        }),
+      ).toHaveCount(0);
       await expect(page.getByRole("link", { name: "blubelinky@gmail.com" })).toBeVisible();
       await expect(page.getByText("CV link placeholder")).toHaveCount(0);
       await expect(page.getByText("Social link placeholder")).toHaveCount(0);
       await expectNoHorizontalOverflow(page);
+      await expectNoForbiddenPublicCopy(page);
 
       expect(consoleErrors).toEqual([]);
     });
@@ -352,13 +410,16 @@ test.describe("Blu Belinky portfolio PDF edit audit", () => {
       expect(hand.distanceFromPin, hand.className).toBeLessThan(0.5);
     }
 
+    await page.waitForTimeout(320);
     await capture(page, testInfo, "contents-clock-active-1440x900");
 
     for (const project of projects) {
       await page.goto("/#contents");
       await page.getByTestId(`clock-project-${project.slug}`).click();
       await expect(page).toHaveURL(`/projects/${project.slug}`);
-      await expect(page.getByRole("heading", { name: project.title })).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: project.caseStudy.title ?? project.title }),
+      ).toBeVisible();
     }
 
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -392,14 +453,11 @@ test.describe("Blu Belinky portfolio PDF edit audit", () => {
     await expect(page).toHaveURL(`/projects/${firstProject.slug}`);
     await expect(page.getByRole("heading", { name: firstProject.title })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Process" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Gallery" })).toBeVisible();
-    await expect(page.getByText("Problem / Brief")).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Brief" })).toHaveCount(0);
-    await expect(page.getByText("Final Outcome")).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Reflection" })).toHaveCount(0);
-    await expect(page.locator(".process-image-composition figure")).toHaveCount(3);
-    await expect(page.locator(".case-gallery figure")).toHaveCount(firstProject.gallery.length);
+    await expect(page.getByText(firstProject.caseStudy.overview ?? "", { exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Featured: “Core Values”" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Beyond the Page" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Outcomes" })).toBeVisible();
+    await expectNoForbiddenPublicCopy(page);
     await expect(page.getByRole("link", { name: "Back to contents" })).toBeVisible();
     await expectNoHorizontalOverflow(page);
     await expectNoFrameworkOverlay(page);
@@ -407,5 +465,89 @@ test.describe("Blu Belinky portfolio PDF edit audit", () => {
     await capture(page, testInfo, `case-study-${firstProject.slug}`);
 
     expect(consoleErrors).toEqual([]);
+  });
+
+  test("all project routes follow the NewPortfolio PDF copy contract", async ({ page }, testInfo) => {
+    const consoleErrors = watchConsole(page);
+    const checks: Record<string, () => Promise<void>> = {
+      "newspaper-design": async () => {
+        await expect(page.getByText(projects[0].caseStudy.overview ?? "", { exact: true })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Featured: “Language & Culture Special”" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Cover Design" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Beyond the Page" })).toBeVisible();
+      },
+      "award-presentation-materials": async () => {
+        await expect(page.getByRole("heading", { name: "Award Presentation" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "The Impact Board" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "The Impact Book" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Outcomes" })).toBeVisible();
+      },
+      "event-design": async () => {
+        await expect(page.getByRole("heading", { name: "Pit Signage: The Four-Banner Wrap" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Festival of Robotics: Event Branding" })).toBeVisible();
+      },
+      "nhsjc-competitions": async () => {
+        await expect(page.getByRole("heading", { name: "2025 · Logo — Play On Music" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "2024 · Advertisement — The Soup Stop" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "2023 · Logo — Beacon Hill Photography Club" })).toBeVisible();
+      },
+      "mk-pottery": async () => {
+        await expect(page.getByRole("heading", { name: "MK Pottery Studio" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Brand Identity:" })).toBeVisible();
+        await expect(page.getByRole("heading", { name: "The Anagama Workshop Brochure" })).toBeVisible();
+      },
+    };
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+
+    for (const project of projects) {
+      await page.goto(`/projects/${project.slug}`);
+      await expect(
+        page.getByRole("heading", { name: project.caseStudy.title ?? project.title }),
+      ).toBeVisible();
+      await expectNoForbiddenPublicCopy(page);
+      await checks[project.slug]();
+      await expectNoHorizontalOverflow(page);
+      await capture(page, testInfo, `project-${project.slug}`);
+    }
+
+    expect(consoleErrors).toEqual([]);
+  });
+
+  test("contact tab lands on the email-only contact panel", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    await page.locator(".site-nav").getByRole("link", { name: "Contact" }).click();
+    await expect(page).toHaveURL(/#contact$/);
+    await page.waitForFunction(() => {
+      const contact = document.querySelector("#contact");
+      const rect = contact?.getBoundingClientRect();
+
+      return rect ? rect.top < window.innerHeight - 220 && rect.bottom > 260 : false;
+    });
+    await expect(page.getByRole("link", { name: "blubelinky@gmail.com" })).toBeVisible();
+    await expect(page.getByText("Email Blu.", { exact: true })).toHaveCount(0);
+    await expect(
+      page.getByText("Blu's public contact information is intentionally limited to email.", {
+        exact: true,
+      }),
+    ).toHaveCount(0);
+
+    const contactRect = await page.locator("#contact").evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+
+      return {
+        bottom: rect.bottom,
+        top: rect.top,
+        viewportHeight: window.innerHeight,
+      };
+    });
+
+    await expect(page.getByRole("heading", { name: "Contact:" })).toBeVisible();
+    expect(contactRect.top).toBeLessThan(contactRect.viewportHeight - 220);
+    expect(contactRect.bottom).toBeGreaterThan(260);
+    expect(contactRect.bottom - contactRect.top).toBeLessThan(430);
+    await expectNoHorizontalOverflow(page);
   });
 });

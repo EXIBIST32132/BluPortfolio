@@ -39,7 +39,6 @@ export const profile: Profile = {
     email: {
       label: "blubelinky@gmail.com",
       href: "mailto:blubelinky@gmail.com",
-      note: "Use email as Blu's only public contact detail.",
     },
   },
 };

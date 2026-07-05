@@ -21,13 +21,19 @@ export function Nav({ homePrefix = "", items = fallbackNavItems }: NavProps) {
       </Link>
       <nav>
         <ul>
-          {items.map((item) => (
-            <li key={item.href}>
-              <Link href={item.href.startsWith("#") ? `${homePrefix}${item.href}` : item.href}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {items.map((item) => {
+            const href = item.href.startsWith("#") ? `${homePrefix}${item.href}` : item.href;
+
+            return (
+              <li key={item.href}>
+                {href.includes("#") ? (
+                  <a href={href}>{item.label}</a>
+                ) : (
+                  <Link href={href}>{item.label}</Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </nav>
     </header>

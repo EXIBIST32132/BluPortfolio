@@ -742,11 +742,11 @@ a {
 }
 
 .clock-board {
-  --clock-radius: clamp(15rem, 22vw, 17.2rem);
+  --clock-radius: clamp(12.75rem, 18.5vw, 14.8rem);
   position: relative;
   display: grid;
   width: min(100%, 48rem);
-  min-height: clamp(38rem, 49vw, 43rem);
+  min-height: clamp(34rem, 45vw, 39rem);
   margin-inline: auto;
   isolation: isolate;
   place-items: center;
@@ -826,8 +826,8 @@ a {
 .clock-caption {
   position: absolute;
   right: auto;
-  bottom: 0.9rem;
-  left: 50%;
+  bottom: -2.05rem;
+  left: 40%;
   z-index: 5;
   max-width: 14rem;
   padding: 0.45rem 0.6rem;
@@ -857,9 +857,9 @@ a {
 .clock-index-link {
   position: relative;
   display: block;
-  width: clamp(8rem, 12vw, 10.5rem);
+  width: clamp(7.8rem, 10.8vw, 9.8rem);
   max-width: none;
-  min-height: 3.7rem;
+  min-height: 3.45rem;
   padding: 0.62rem 0.75rem;
   color: var(--color-black);
   text-align: left;
@@ -1196,6 +1196,13 @@ a {
 }
 
 .contact-section {
+  display: grid;
+  min-height: clamp(18rem, 38dvh, 24rem);
+  grid-template-columns: minmax(0, 42rem);
+  gap: var(--space-4);
+  align-content: center;
+  justify-content: center;
+  padding-block: clamp(1.4rem, 3.5vw, 3rem);
   margin-bottom: 0;
   background:
     linear-gradient(90deg, rgb(102 152 226 / 0.16), transparent 34%),
@@ -1207,21 +1214,36 @@ a {
   transform: rotate(2.5deg);
 }
 
+.contact-heading {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.contact-heading h2 {
+  max-width: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 6vw, 5.2rem);
+  line-height: 0.9;
+  text-align: left;
+  transform: rotate(-1deg);
+}
+
 .contact-list {
   position: relative;
   z-index: var(--z-content);
-  grid-template-columns: minmax(0, 38rem);
-  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
 }
 
 .contact-list li {
   display: grid;
-  min-height: 7rem;
+  min-height: auto;
   align-content: center;
-  padding: var(--space-4);
+  padding: clamp(0.9rem, 2.3vw, 1.35rem);
   background: var(--color-paper);
   border: var(--border-medium) solid var(--color-black);
-  box-shadow: 6px 6px 0 var(--color-purple);
+  box-shadow: 5px 5px 0 var(--color-purple);
 }
 
 .contact-list a,
@@ -1307,6 +1329,282 @@ a {
   top: -1rem;
   left: 50%;
   transform: translateX(-50%) rotate(-4deg);
+}
+
+.case-hero-pdf {
+  align-items: center;
+}
+
+.case-hero-pdf .case-hero-copy h1 {
+  max-width: 10ch;
+}
+
+.case-hero-pdf .case-hero-copy > p {
+  max-width: 34rem;
+}
+
+.case-pdf-story {
+  position: relative;
+  z-index: var(--z-content);
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: var(--space-7);
+}
+
+.pdf-copy-block,
+.pdf-feature-copy,
+.pdf-cover-design,
+.pdf-range-grid,
+.pdf-pit-signage,
+.pdf-brand-identity,
+.pdf-brochure {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.pdf-copy-block {
+  max-width: 56rem;
+  padding: var(--space-5);
+  background: var(--color-paper);
+  border: var(--border-medium) solid var(--color-black);
+  box-shadow: 7px 7px 0 var(--color-blue-wash);
+}
+
+.pdf-copy-block h2,
+.pdf-feature-copy h2,
+.pdf-cover-design h2,
+.pdf-range-grid h2,
+.pdf-bottom-features h2,
+.pdf-beyond-page h2,
+.pdf-section-heading-centered h2,
+.pdf-pit-signage h2,
+.pdf-festival h2,
+.pdf-brand-identity h2,
+.pdf-brochure h2 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 0.95;
+}
+
+.pdf-copy-block p,
+.pdf-feature-copy p,
+.pdf-cover-design p,
+.pdf-bottom-features p,
+.pdf-beyond-page p,
+.pdf-section-heading-centered p,
+.pdf-pit-signage p,
+.pdf-festival p,
+.pdf-brand-identity p,
+.pdf-brochure p {
+  max-width: 60rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: clamp(1rem, 1.35vw, 1.14rem);
+  font-weight: 650;
+}
+
+.pdf-image {
+  min-width: 0;
+  margin: 0;
+}
+
+.pdf-image-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-paper);
+  border: var(--border-medium) solid var(--color-black);
+  box-shadow: 7px 7px 0 var(--project-accent);
+}
+
+.pdf-image-frame img {
+  object-fit: contain;
+}
+
+.pdf-image-standard .pdf-image-frame {
+  aspect-ratio: 1.18;
+}
+
+.pdf-image-wide .pdf-image-frame {
+  aspect-ratio: 1.75;
+}
+
+.pdf-image-square .pdf-image-frame {
+  aspect-ratio: 1;
+}
+
+.pdf-image-poster .pdf-image-frame {
+  aspect-ratio: 0.72;
+}
+
+.pdf-image-tall .pdf-image-frame {
+  aspect-ratio: 0.28;
+}
+
+.pdf-feature-stack,
+.pdf-nhsjc-entries {
+  display: grid;
+  gap: clamp(1.4rem, 3vw, 2.5rem);
+}
+
+.pdf-feature-row,
+.pdf-image-text-pair,
+.pdf-beyond-page,
+.pdf-festival {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(260px, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+}
+
+.pdf-feature-row-reverse,
+.pdf-image-text-pair-reverse {
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 0.9fr);
+}
+
+.pdf-feature-row-reverse .pdf-image,
+.pdf-image-text-pair-reverse .pdf-image {
+  order: 2;
+}
+
+.pdf-feature-row-reverse .pdf-feature-copy,
+.pdf-image-text-pair-reverse .pdf-feature-copy {
+  order: 1;
+}
+
+.pdf-cover-design,
+.pdf-range-grid,
+.pdf-pit-signage,
+.pdf-brand-identity,
+.pdf-brochure {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.pdf-cover-design h2,
+.pdf-range-grid h2,
+.pdf-pit-signage h2,
+.pdf-brand-identity h2,
+.pdf-brochure h2 {
+  text-align: center;
+}
+
+.pdf-cover-pair,
+.pdf-impact-support,
+.pdf-brochure-feature {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.pdf-range-grid > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.pdf-range-grid .pdf-image:nth-child(-n + 3) {
+  grid-column: span 1;
+}
+
+.pdf-bottom-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.pdf-bottom-features article {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.pdf-bottom-features h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+}
+
+.pdf-beyond-images,
+.pdf-brand-row,
+.pdf-brochure-support {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.pdf-beyond-images {
+  grid-template-columns: minmax(0, 0.64fr) minmax(0, 0.72fr);
+  align-items: end;
+}
+
+.pdf-section-heading-centered {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.pdf-impact-board {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.pdf-image-text-pair .pdf-image-poster {
+  max-width: 24rem;
+}
+
+.pdf-pit-signage > p,
+.pdf-brand-identity > p,
+.pdf-brochure > p,
+.pdf-cover-design > p {
+  justify-self: center;
+  max-width: 56rem;
+  text-align: left;
+}
+
+.pdf-four-banner-wrap {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.42fr) minmax(0, 1fr) minmax(5rem, 0.42fr);
+  grid-template-rows: minmax(6rem, 0.55fr) minmax(14rem, 1fr);
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+.pdf-four-banner-wrap .pdf-image-frame {
+  height: 100%;
+}
+
+.pdf-four-banner-wrap .pdf-image:nth-child(1) {
+  grid-row: 1 / 3;
+}
+
+.pdf-four-banner-wrap .pdf-image:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.pdf-four-banner-wrap .pdf-image:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.pdf-four-banner-wrap .pdf-image:nth-child(4) {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.pdf-festival {
+  justify-items: center;
+}
+
+.pdf-brand-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pdf-brochure-feature {
+  align-items: start;
+}
+
+.pdf-brochure-support {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .case-image-frame {
@@ -1521,6 +1819,30 @@ code {
     grid-template-columns: 1fr;
   }
 
+  .pdf-feature-row,
+  .pdf-feature-row-reverse,
+  .pdf-image-text-pair,
+  .pdf-image-text-pair-reverse,
+  .pdf-beyond-page,
+  .pdf-festival {
+    grid-template-columns: 1fr;
+  }
+
+  .pdf-feature-row-reverse .pdf-image,
+  .pdf-image-text-pair-reverse .pdf-image,
+  .pdf-feature-row-reverse .pdf-feature-copy,
+  .pdf-image-text-pair-reverse .pdf-feature-copy {
+    order: initial;
+  }
+
+  .pdf-four-banner-wrap {
+    grid-template-columns: 0.42fr 1fr 0.42fr;
+  }
+
+  .pdf-image-text-pair .pdf-image-poster {
+    max-width: none;
+  }
+
   .cover-scrap-purple {
     display: none;
   }
@@ -1686,7 +2008,8 @@ code {
   }
 
   .clock-caption {
-    bottom: -0.35rem;
+    bottom: -1.45rem;
+    left: 50%;
     max-width: min(16rem, 74vw);
     text-align: center;
   }
@@ -1700,12 +2023,44 @@ code {
     padding: var(--space-4);
   }
 
+  .contact-section {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .contact-heading h2 {
+    font-size: clamp(2rem, 12vw, 3.2rem);
+  }
+
   .project-grid,
   .contact-list,
   .case-meta,
   .process-image-composition,
-  .case-gallery {
+  .case-gallery,
+  .pdf-cover-pair,
+  .pdf-bottom-features,
+  .pdf-brand-row,
+  .pdf-brochure-feature,
+  .pdf-brochure-support {
     grid-template-columns: 1fr;
+  }
+
+  .pdf-range-grid > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pdf-four-banner-wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .pdf-four-banner-wrap .pdf-image:nth-child(n) {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .pdf-image-tall .pdf-image-frame {
+    aspect-ratio: 0.7;
   }
 
   .project-card {

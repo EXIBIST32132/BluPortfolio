@@ -16,14 +16,14 @@ export function ClockIllustration({
     transform: `rotate(${pointingAngle}deg)`,
     transition: reducedMotion
       ? "none"
-      : "transform var(--duration-slow) var(--ease-out-soft)",
+      : "transform var(--duration-base) var(--ease-out-soft)",
   };
 
   const shortHandStyle = {
-    transform: `rotate(${pointingAngle * 0.55 + 35}deg)`,
+    transform: `rotate(${pointingAngle}deg)`,
     transition: reducedMotion
       ? "none"
-      : "transform var(--duration-slow) var(--ease-out-soft)",
+      : "transform var(--duration-base) var(--ease-out-soft)",
   };
 
   return (

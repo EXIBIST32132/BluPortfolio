@@ -21,6 +21,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Blu's public contact is email only: `blubelinky@gmail.com`. Do not add phone numbers, addresses, or private contact details.
 
+## NewPortfolio.pdf Source Of Truth
+
+`NewPortfolio.pdf` is the current content and layout source of truth. The layout drawings inside the PDF are not literal website artwork:
+
+- blue boxes are image slots
+- numbers inside boxes are image-slot references
+- `blah blah`/lorem text is placement-only
+- the real public copy is the text written below each project wireframe
+
+ASL Robotics Rebrand is currently removed from the public clock, Work cards, order, and route unless Blu asks to restore it later.
+
 ## Adding Or Editing Projects
 
 Add or update project objects in `src/content/projects.ts`.
@@ -47,14 +58,12 @@ Important public-facing fields:
 - `role`
 - `tools`
 - `summary`
-- `overview`
-- `process`
-- `processImages`
+- `caseStudy`
 - `gallery`
 
 Project pages are generated automatically at `/projects/[slug]`.
 
-The legacy fields `brief`, `outcome`, and `reflection` are still present in the typed data for compatibility, but the public case-study layout now uses `Overview`, `Process`, and `Gallery`.
+The legacy fields `overview`, `brief`, `process`, `outcome`, and `reflection` may remain in typed data for compatibility, but the public pages render from `caseStudy`. Keep public project body copy limited to Blu's `NewPortfolio.pdf` wording.
 
 ## Clock Angles
 
@@ -81,7 +90,12 @@ Opening images and galleries are now organized by project folder:
 - `public/images/projects/nhsjc-competitions/`
 - `public/images/projects/mk-pottery/`
 
-To replace an opening image, add the new file under the relevant project folder and update the matching `heroImage` and `thumbnail` paths. To edit the case-study process composition, update `processImages`; the first image is the large left image and the next two are stacked on the right. The `gallery` array should include all images Blu wants shown for that project.
+To replace an opening image, add the new file under the relevant project folder and update the matching `heroImage`, `thumbnail`, and `caseStudy.heroImage` paths. To edit PDF-specific case-study slots, update the matching `caseStudy` subsection and keep `docs/layout-slot-map.md` in sync.
+
+Reference docs:
+
+- `docs/image-manifest.md` lists available images and likely project matches.
+- `docs/layout-slot-map.md` maps each PDF wireframe slot to the chosen image and exact copy block.
 
 ## DT Getai Font
 
@@ -104,11 +118,13 @@ npm run build
 npm run qa:visual
 ```
 
-`npm run qa:visual` runs `tests/visual.spec.ts`. It checks 1920x1080, 1440x900, 1024x768, and 390x844; no horizontal overflow; console health; fixed tabs; Contents clock hover/focus/reduced-motion behavior; project cards; and at least one case-study page. Screenshots are saved under `test-results/visual-audit/`.
+`npm run qa:visual` runs `tests/visual.spec.ts`. It checks 1920x1080, 1440x900, 1024x768, and 390x844; no horizontal overflow; console health; fixed tabs; Contents clock hover/focus/reduced-motion behavior; exact five-project Work card copy; project routes; and the PDF-specific case-study headings. Screenshots are saved under `test-results/visual-audit/`.
 
 ## Stage And Panel System
 
-The portfolio is now a continuous warm-paper editorial flow with a black fixed header/stage edge and connected white portfolio panels. Blu's PDF edits removed the slideshow-like section gaps, replaced the `BB` mark with `Blu Belinky`, removed the opening tagline/time label, made clock boxes clickable, and changed case studies to `Overview`, `Process`, and `Gallery`. The follow-up image pass removed ASL Robotics Rebrand and moved each remaining project's image set into its own folder.
+The portfolio is now a continuous warm-paper editorial flow with a black fixed header/stage edge and connected white portfolio panels. Blu's PDF edits removed the slideshow-like section gaps, replaced the `BB` mark with `Blu Belinky`, removed the opening tagline/time label, and made clock boxes clickable.
+
+The current public version uses five projects, keeps ASL Robotics Rebrand removed, and replaces the old generic case-study template with project-specific layouts drawn from the PDF wireframes.
 
 Keep this system intact when adding features so the site does not drift toward a generic SaaS/card-grid portfolio.
 

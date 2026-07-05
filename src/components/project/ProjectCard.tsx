@@ -33,7 +33,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         <span className="project-card-number" aria-hidden="true">
           {String(index + 1).padStart(2, "0")}
         </span>
-        <span className="project-card-label">Case study</span>
+        <span className="project-card-label">Project</span>
         <div className="project-thumb">
           <Image
             src={project.thumbnail.src}
@@ -41,7 +41,6 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             fill
             sizes="(max-width: 720px) 92vw, (max-width: 1024px) 44vw, 320px"
           />
-          <span>{project.year}</span>
         </div>
         <div className="project-card-copy">
           <h3>{project.title}</h3>

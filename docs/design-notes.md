@@ -26,9 +26,9 @@ The supplied visual direction was interpreted as a portfolio object rather than 
 - Design presets map to CSS data attributes and tokens. Do not introduce arbitrary one-off style controls for content edits.
 - Project images live under `public/images/projects/` and must include useful alt text in the project data.
 
-## Portfolio.pdf Edit Pass
+## NewPortfolio.pdf Edit Pass
 
-Blu's latest PDF notes are the source of truth for this refinement pass.
+`NewPortfolio.pdf` is the current source of truth for this refinement pass. It supersedes older PDF edits and the previous generic case-study template.
 
 - The page now reads as one continuous warm-paper portfolio flow instead of separated slideshow-like panels.
 - The fixed header is flush with the top of the viewport and uses the full name `Blu Belinky`.
@@ -36,8 +36,10 @@ Blu's latest PDF notes are the source of truth for this refinement pass.
 - The contents clock keeps the project-led index, but every project box is now a real case-study link.
 - Desktop clock labels are spaced outside the clock face; smaller screens switch to a readable editorial list.
 - The current five-project order is: Newspaper Design, Award Presentation Materials, Event Design, NHSJC Competitions, MK Pottery.
-- Case-study pages use Overview, Process, and Gallery, with a large-left/two-right process image composition and galleries that show every image in each organized project folder.
-- ASL Robotics Rebrand was removed in the follow-up image pass.
+- The PDF layout images are interpreted as layout instructions: blue boxes are image slots, numbers are image-slot references, and `blah blah` text is not public copy.
+- Newspaper, Award Presentation Materials, Event Design, NHSJC Competitions, and MK Pottery use project-specific layouts mapped from the PDF wireframes and `Images/` assets.
+- ASL Robotics Rebrand is currently removed from the public portfolio list and route unless Blu asks to restore it later.
+- Project copy should not be invented or paraphrased. Public card/body text must come from `NewPortfolio.pdf`.
 
 ## Seamless Stage System
 

@@ -33,13 +33,9 @@ export function ContactSection({ profile, siteSettings }: ContactSectionProps) {
       className="editorial-panel contact-section"
       aria-labelledby="contact-title"
     >
-      <div className="section-heading">
-        <p>Contact</p>
-        <h2 id="contact-title">Email Blu.</h2>
+      <div className="contact-heading">
+        <h2 id="contact-title">Contact:</h2>
       </div>
-      <p className="section-intro">
-        Blu&apos;s public contact information is intentionally limited to email.
-      </p>
       <ul className="contact-list">
         <ContactItem {...contact.email} />
         {cvHref ? <ContactItem label="CV" href={cvHref} note="Editable in src/content/profile.ts." /> : null}
