@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { Tape } from "@/components/decorative/Tape";
-import { ProjectContentBlocks } from "@/components/project/ProjectContentBlocks";
 import { Tag } from "@/components/ui/Tag";
 import { slowTransition } from "@/lib/motion";
 import type { Project } from "@/types/portfolio";
@@ -99,8 +98,6 @@ export function ProjectCaseStudy({ nextProject, project }: ProjectCaseStudyProps
           <p>{project.reflection}</p>
         </section>
       </div>
-
-      <ProjectContentBlocks sections={project.sections} />
 
       <section className="gallery-section" aria-labelledby="gallery-heading">
         <h2 id="gallery-heading">Gallery</h2>

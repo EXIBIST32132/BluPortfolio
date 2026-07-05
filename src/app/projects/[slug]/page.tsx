@@ -2,13 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { ProjectCaseStudy } from "@/components/project/ProjectCaseStudy";
-import { profile as fallbackProfile } from "@/content/profile";
-import {
-  getAllProjects,
-  getNextProject,
-  getPortfolioContent,
-  getProjectBySlug,
-} from "@/sanity/content";
+import { profile, siteSettings } from "@/content/profile";
+import { getNextProject, getProject, projects } from "@/content/projects";
 
 type ProjectPageProps = {
   params: Promise<{
@@ -16,9 +11,7 @@ type ProjectPageProps = {
   }>;
 };
 
-export async function generateStaticParams() {
-  const projects = await getAllProjects();
-
+export function generateStaticParams() {
   return projects.map((project) => ({
     slug: project.slug,
   }));
@@ -26,32 +19,29 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { project } = await getProjectBySlug(slug);
+  const project = getProject(slug);
 
   if (!project) {
     return {
-      title: `Project not found - ${fallbackProfile.name}`,
+      title: `Project not found - ${profile.name}`,
     };
   }
 
   return {
-    title: `${project.title} - ${fallbackProfile.name}`,
+    title: `${project.title} - ${profile.name}`,
     description: project.summary,
   };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
-  const [{ project, projects }, { siteSettings }] = await Promise.all([
-    getProjectBySlug(slug),
-    getPortfolioContent(),
-  ]);
+  const project = getProject(slug);
 
   if (!project) {
     notFound();
   }
 
-  const nextProject = getNextProject(projects, project.slug);
+  const nextProject = getNextProject(project.slug);
 
   return (
     <SiteShell

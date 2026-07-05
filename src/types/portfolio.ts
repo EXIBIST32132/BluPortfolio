@@ -1,5 +1,3 @@
-import type { PortableTextBlock } from "next-sanity";
-
 export type AccentTheme = "blue" | "purple" | "mixed";
 export type AccentColorPreset = "blue" | "purple" | "mixed" | "black";
 export type TextScalePreset = "compact" | "normal" | "large";
@@ -77,74 +75,6 @@ export type ProjectImage = {
   caption: string;
 };
 
-export type TextSizePreset = "caption" | "body" | "lede" | "heading" | "display";
-export type TextAlignment = "left" | "center";
-export type TextEmphasis = "normal" | "sticker" | "label";
-
-type ProjectSectionBase = {
-  _key?: string;
-  sizePreset?: TextSizePreset;
-  alignment?: TextAlignment;
-  emphasis?: TextEmphasis;
-};
-
-export type RichTextBlockSection = ProjectSectionBase & {
-  _type: "richTextBlock";
-  heading?: string;
-  body: PortableTextBlock[];
-};
-
-export type ImageBlockSection = ProjectSectionBase & {
-  _type: "imageBlock" | "fullBleedImageBlock";
-  image: ProjectImage;
-};
-
-export type ImageGalleryBlockSection = ProjectSectionBase & {
-  _type: "imageGalleryBlock";
-  heading?: string;
-  images: ProjectImage[];
-};
-
-export type QuoteBlockSection = ProjectSectionBase & {
-  _type: "quoteBlock";
-  quote: string;
-  attribution?: string;
-};
-
-export type ProcessStepBlockSection = ProjectSectionBase & {
-  _type: "processStepBlock";
-  heading?: string;
-  steps: Array<{ _key?: string; title: string; text: string }>;
-};
-
-export type OutcomeBlockSection = ProjectSectionBase & {
-  _type: "outcomeBlock";
-  heading?: string;
-  body: string;
-};
-
-export type TwoColumnBlockSection = ProjectSectionBase & {
-  _type: "twoColumnBlock";
-  left: PortableTextBlock[];
-  right: PortableTextBlock[];
-};
-
-export type SpacerBlockSection = {
-  _type: "spacerBlock";
-  _key?: string;
-  size: "small" | "medium" | "large";
-};
-
-export type ProjectSection =
-  | RichTextBlockSection
-  | ImageBlockSection
-  | ImageGalleryBlockSection
-  | QuoteBlockSection
-  | ProcessStepBlockSection
-  | OutcomeBlockSection
-  | TwoColumnBlockSection
-  | SpacerBlockSection;
-
 export type Project = {
   slug: string;
   title: string;
@@ -169,7 +99,6 @@ export type Project = {
   sourceUrl?: string;
   contentNote?: string;
   gallery: ProjectImage[];
-  sections: ProjectSection[];
 };
 
 export type PortfolioContent = {

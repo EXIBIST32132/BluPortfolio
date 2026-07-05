@@ -14,19 +14,17 @@ The supplied visual direction was interpreted as a portfolio object rather than 
 ## Interaction System
 
 - The Contents clock is the signature interaction. It has a resting state, then rotates its hands toward the active project's `clockAngle`.
-- In production, `clockAngle`, project order, project title, tags, cards, and case-study copy come from Sanity project documents. Local TypeScript content is only a fallback fixture.
+- In production, `clockAngle`, project order, project title, tags, cards, and case-study copy come from the local typed files in `src/content/`.
 - Hover, keyboard focus, click, and touch all update the same active project state.
 - Desktop and tablet preserve a radial editorial layout. Small mobile screens switch the project items into a list so names remain readable and tappable.
 - Reduced-motion mode keeps the active-state change but removes animated hand rotation.
 
-## CMS Editing Model
+## Editing Model
 
-- Sanity Studio is embedded at `/studio`.
-- Editors can change site settings, profile text, navigation labels, contact email, optional CV link/file, project cards, project pages, image galleries, tags, section visibility/order, and constrained design presets.
-- Design presets map to CSS data attributes and tokens. The CMS must not expose arbitrary raw CSS.
-- Sanity images use crop/hotspot support and must include useful alt text.
-- Preview mode uses `/api/draft/enable` and Visual Editing when Sanity env vars and a read token are present.
-- Published updates should hit `/api/revalidate` with the Sanity webhook secret so homepage and project caches refresh.
+- Edit site/profile content in `src/content/profile.ts`.
+- Edit projects, cards, tags, image paths, case-study copy, and clock angles in `src/content/projects.ts`.
+- Design presets map to CSS data attributes and tokens. Do not introduce arbitrary one-off style controls for content edits.
+- Project images live under `public/images/projects/` and must include useful alt text in the project data.
 
 ## Seamless Stage System
 

@@ -15,14 +15,11 @@ This repository is Blu Belinky's custom design portfolio. Treat it as a designed
 - The black stage/background must fill the full viewport at every breakpoint. Do not allow accidental white browser edges, horizontal scroll, or short awkward gaps between portfolio panels.
 - The top navigation tabs must remain fixed, visible, readable, and keyboard accessible while scrolling on both the homepage and project pages.
 - Avoid regressions toward generic SaaS/card-grid layouts. Project cards should keep a paper/poster/collage feeling and remain project-led.
-- Sanity is the production editing surface. Do not move public content back to hardcoded-only files; local `src/content/*` files are fallback fixture content for builds without CMS credentials.
-- Sanity Studio lives at `/studio`. Keep CMS schemas constrained to presets and structured fields; do not expose arbitrary raw CSS strings through the CMS.
-- Project `clockAngle` and `order` are CMS-editable and must keep the Contents clock hover/focus/tap interaction accurate, keyboard accessible, and mobile usable.
-- Keep Sanity preview/revalidation routes server-only. Do not expose read/write tokens to the browser or commit private env values.
+- Local typed files are the production editing surface. Keep Blu's content easy to edit in `src/content/profile.ts` and `src/content/projects.ts`.
+- Project `clockAngle` and `order` live in `src/content/projects.ts` and must keep the Contents clock hover/focus/tap interaction accurate, keyboard accessible, and mobile usable.
 - Maintain accessibility: semantic HTML, keyboard navigation, visible focus states, labelled links/buttons, alt text, acceptable contrast, and mobile responsiveness.
 - Do not use unlicensed fonts. Use DT Getai only if Blu provides a licensed local font file under `public/fonts/`; otherwise keep the documented fallback and README TODO.
 - Do not invent real contact details, phone numbers, private addresses, or social links. Use placeholders only when clearly labelled as editable placeholders.
-- Keep Blu's content easy to edit in `src/content/profile.ts` and `src/content/projects.ts`.
 
 ## Verification
 

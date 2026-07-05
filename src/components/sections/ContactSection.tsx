@@ -42,7 +42,7 @@ export function ContactSection({ profile, siteSettings }: ContactSectionProps) {
       </p>
       <ul className="contact-list">
         <ContactItem {...contact.email} />
-        {cvHref ? <ContactItem label="CV" href={cvHref} note="Editable in Sanity site settings." /> : null}
+        {cvHref ? <ContactItem label="CV" href={cvHref} note="Editable in src/content/profile.ts." /> : null}
         {siteSettings.socialLinks.map((link) => (
           <ContactItem key={link.url} label={link.label} href={link.url} />
         ))}

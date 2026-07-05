@@ -4,10 +4,10 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import { ContentsClock } from "@/components/sections/ContentsClock";
 import { HeroCover } from "@/components/sections/HeroCover";
 import { SelectedProjects } from "@/components/sections/SelectedProjects";
-import { getPortfolioContent } from "@/sanity/content";
+import { profile, siteSettings } from "@/content/profile";
+import { projects } from "@/content/projects";
 
-export default async function Home() {
-  const { profile, projects, siteSettings } = await getPortfolioContent();
+export default function Home() {
   const visibleSections = siteSettings.sections
     .filter((section) => section.visible)
     .sort((a, b) => a.order - b.order);

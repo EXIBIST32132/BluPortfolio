@@ -3,9 +3,7 @@ import type { AccentColorPreset, Project } from "@/types/portfolio";
 const draftNote =
   "Draft case-study copy from Blu's public Carrd listing. Replace with Blu's exact brief, process notes, and final reflection when available.";
 
-const baseProjects: Array<
-  Omit<Project, "accentColorPreset" | "featured" | "order" | "sections">
-> = [
+const baseProjects: Array<Omit<Project, "accentColorPreset" | "featured" | "order">> = [
   {
     slug: "asl-robotics-website",
     title: "ASL Robotics Website",
@@ -274,7 +272,6 @@ export const projects: Project[] = baseProjects.map((project, index) => ({
   featured: true,
   order: (index + 1) * 10,
   accentColorPreset: accentPresetBySlug[project.slug] ?? "mixed",
-  sections: [],
 }));
 
 export function getProject(slug: string) {
